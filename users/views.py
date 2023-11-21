@@ -49,7 +49,8 @@ class LoginAPIView(APIView):
                     "name": user.name,
                     "is_superuser": user.is_superuser,
                     "username": user.username,
-                    "Token": token.key
+                    "Token": token.key,
+                    "id": user.id
                     })
             return Response(
                 {"message": "error", "code": status.HTTP_401_UNAUTHORIZED, "details": ["Invalid credentials"]})

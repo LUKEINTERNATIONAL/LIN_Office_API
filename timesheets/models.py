@@ -7,7 +7,7 @@ class Timesheet(models.Model):
     holiday_id = models.BigIntegerField()
     user_id = models.BigIntegerField()
     attachments_id = models.BigIntegerField()
-    task = models.CharField(max_length=100)
+    task = models.CharField(max_length=100,blank=True)
     description = models.CharField(max_length=100,blank=True)
     start_time = models.CharField(max_length=100,blank=True)
     end_time = models.CharField(max_length=100,blank=True)

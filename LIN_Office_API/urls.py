@@ -19,5 +19,10 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls'))
+    path('users/', include('users.urls')),
+    path('apps/', include('apps.urls')),
+    path('attachments/', include('attachments.urls')),
+    path('holidays/', include('holidays.urls')),
+    path('projects/', include('projects.urls')),
+    path('timesheets/', include('timesheets.urls'))
 ]

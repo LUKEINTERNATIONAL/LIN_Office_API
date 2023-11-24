@@ -60,21 +60,19 @@ class UserView(CustomPermissionMixin,APIView):
     def get(self, request): # list user
         service = ApplicationService()
         if(request.user.is_superuser):
-            query ='''SELECT u.id as userid,u.zone_id as is_zone,* FROM users_customuser u 
-            LEFT JOIN district d on d.id = u.district_id
-            LEFT JOIN zone z on z.id = d.zone_id
+            query ='''SELECT cu.id,cu.is_superuser,cu.username,cu.email,
+            cu.name, cu.phone, o.occupation_name,p.project_name
+            FROM users_customuser cu
+            LEFT JOIN project_user pu on pu.user_id = cu.id
+            LEFT JOIN occupation_user ou on ou.user_id = cu.id
+            LEFT JOIN projects p on p.id = pu.project_id
+            LEFT JOIN occupations o on o.id = ou.occupation_id
             '''
         elif(request.user.zone_id is not 0):
-             query ='''SELECT u.id as userid,u.zone_id as is_zone,* FROM users_customuser u 
-            LEFT JOIN district d on d.id = u.district_id
-            LEFT JOIN zone z on z.id = d.zone_id
-            WHERE z.id = {}
-            '''.format(request.user.zone_id)
+             query ='''SELECT * FROM users_customuser 
+            '''
         else:
-             query ='''SELECT u.id as userid,u.zone_id as is_zone,* FROM users_customuser u 
-            LEFT JOIN district d on d.id = u.district_id
-            LEFT JOIN zone z on z.id = d.zone_id
-            WHERE u.id = {}
+             query ='''SELECT * FROM users_customuser 
             '''.format(request.user.id)
         results = service.query_processor(query)
         return JsonResponse({
@@ -109,29 +107,29 @@ class UserView(CustomPermissionMixin,APIView):
             username=data["username"],
             password=password,
             email=data["email"], 
-            is_superuser=data["is_superuser"],
-            district_id=data["district_id"] if data["district_id"] else 0,
-            zone_id= data["zone_id"] if data["zone_id"] else 0,
             name=data["name"],
+            birthdate=data["birthdate"],
+            occupation=data["occupation"],
             phone=data["phone"],
+            is_superuser=data["is_superuser"],
         )
         message = EmailDetails().compose_password_email(data["name"], data["username"],password)
         EmailDetails().send_email(data["email"],message,'Your New Account has been Created!')
         return Response({"status": "OK"})
     
-    def put(self, request, pk):
+    def put(self, request):
         try:
-            user = CustomUser.objects.get(id=pk)
+            user = CustomUser.objects.get(id=request.data['id'])
         except ObjectDoesNotExist:
             return Response({"status": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         
         user.username = request.data['username']
         user.email = request.data['email']
         user.name = request.data['name']
+        user.birthdate = request.data['birthdate']
+        user.occupation = request.data['occupation']
         user.phone = request.data['phone']
         user.is_superuser = request.data['is_superuser']
-        user.district_id = request.data['district_id'] if request.data['district_id'] else 0
-        user.zone_id = request.data['zone_id'] if request.data['zone_id'] else 0
         user.save()
         return Response({"status": "OK"})
     

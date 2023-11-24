@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'timesheets',
     'holidays',
     'attachments',
+    'supervisor',
+    'occupations',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',

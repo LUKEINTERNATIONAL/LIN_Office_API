@@ -24,5 +24,6 @@ urlpatterns = [
     path('attachments/', include('attachments.urls')),
     path('holidays/', include('holidays.urls')),
     path('projects/', include('projects.urls')),
-    path('timesheets/', include('timesheets.urls'))
+    path('timesheets/', include('timesheets.urls')),
+    path('occupations/', include('occupations.urls'))
 ]

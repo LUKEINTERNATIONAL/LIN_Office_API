@@ -4,5 +4,5 @@ from projects.views import CreateProject, List
 
 urlpatterns = [
     path('create', CreateProject.as_view()),
-    path('list', List.as_view())
+    path('get', List.as_view())
 ]
